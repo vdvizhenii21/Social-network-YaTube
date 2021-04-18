@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+{% load user_filters %}
+<main role="main" class="container">
+        <div class="row">
+            {% include "author_card.html" with profile=True %}      
+            <div class="col-md-9"> 
+                {% include "post_item.html" with post=post %}
+                {% include "comments.html" with comment=post.comment.all %}      
+            </div>
+        </div>
+</main>
+{% endblock %}
