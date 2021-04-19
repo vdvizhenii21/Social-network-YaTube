@@ -21,8 +21,7 @@
                     Записей: {{ author.posts.count }}
                 </div>
             </li>
-            {% if profile %}
-            {% if request.user != author %}
+            {% if request.user != author and profile %}
             <li class="list-group-item">
                 {% if following %}
                 <a class="btn btn-lg btn-light" 
@@ -36,6 +35,5 @@
                     </a>
                 {% endif %}
             </li>
-            {% endif %}
             {% endif %}
 </div>
