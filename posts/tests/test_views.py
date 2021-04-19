@@ -17,7 +17,7 @@ class PostPagesTests(TestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.test_user = User.objects.create_user(username='ScouserVT')
-        cls.test_follower = User.objects.create_user(username='Fare')
+        cls.follower_user = User.objects.create_user(username='Fare')
         cls.group = Group.objects.create(
             title='Test',
             slug='testslug',
@@ -30,7 +30,7 @@ class PostPagesTests(TestCase):
             b'\x02\x00\x01\x00\x00\x02\x02\x0C'
             b'\x0A\x00\x3B'
         )
-        cls.uploaded = SimpleUploadedFile(
+        uploaded = SimpleUploadedFile(
             name='small.gif',
             content=small_gif,
             content_type='image/gif'
@@ -39,7 +39,7 @@ class PostPagesTests(TestCase):
             text='Тестовый текст',
             author=cls.test_user,
             group=cls.group,
-            image=cls.uploaded,
+            image=uploaded,
         )
 
     @classmethod
@@ -49,12 +49,12 @@ class PostPagesTests(TestCase):
 
     def setUp(self):
         test_user = PostPagesTests.test_user
-        test_follower = PostPagesTests.test_follower
+        follower_user = PostPagesTests.follower_user
         self.guest_client = Client()
         self.authorized_client = Client()
         self.authorized_client.force_login(test_user)
         self.authorized_client2 = Client()
-        self.authorized_client2.force_login(test_follower)
+        self.authorized_client2.force_login(follower_user)
 
     def test_pages_use_correct_template(self):
         """URL-адрес использует соответствующий шаблон."""
@@ -85,7 +85,7 @@ class PostPagesTests(TestCase):
         self.assertEqual(post_image_0, self.post.image)
 
     def test_follow_index_page(self):
-        Follow.objects.create(author=self.test_user, user=self.test_follower)
+        Follow.objects.create(author=self.test_user, user=self.follower_user)
         response = self.authorized_client2.get(reverse('follow_index'))
         self.post_on_page(response)
 
@@ -110,7 +110,6 @@ class PostPagesTests(TestCase):
             reverse('profile', args=[self.test_user])
         )
         self.post_on_page(response)
-        self.assertIn(self.post, response.context['page'])
         self.assertEqual(response.context['author'], self.test_user)
 
     def test_post_view_correct_context(self):
@@ -159,16 +158,16 @@ class PostPagesTests(TestCase):
 
     def test_follow(self):
         follow_count = Follow.objects.count()
-        Follow.objects.create(author=self.test_user, user=self.test_follower)
+        Follow.objects.create(author=self.test_user, user=self.follower_user)
         self.assertEqual(Follow.objects.count(), follow_count + 1)
         last_object = Follow.objects.last()
         self.assertEqual(last_object.author, self.test_user)
-        self.assertEqual(last_object.user, self.test_follower)
+        self.assertEqual(last_object.user, self.follower_user)
 
     def test_unfollow(self):
         follow_count = Follow.objects.count()
-        Follow.objects.create(author=self.test_user, user=self.test_follower)
-        Follow.objects.filter(
-            author=self.test_user, user=self.test_follower
-        ).delete()
+        Follow.objects.create(author=self.test_user, user=self.follower_user)
+        self.authorized_client2.get(
+            reverse('profile_unfollow', args={self.test_user})
+        )
         self.assertEqual(Follow.objects.count(), follow_count)

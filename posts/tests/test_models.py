@@ -8,7 +8,7 @@ class PostModelTest(TestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.post = Post.objects.create(
-            text='Тестовый текст',
+            text='Тестовый текст, должен быть не меньше 15 символов!',
             author=User.objects.create_user(username='TestName'),
         )
         cls.group = Group.objects.create(
@@ -51,7 +51,7 @@ class PostModelTest(TestCase):
     def test_post_text_str(self):
         post = PostModelTest.post
         text = post.text
-        self.assertEqual(text[:15], str(post))
+        self.assertEqual(str(post), text[:15])
 
     def test_group_str(self):
         group = PostModelTest.group

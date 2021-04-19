@@ -64,10 +64,7 @@ class PostCreateFormTests(TestCase):
         self.assertEqual(post_last.text, form_data['text'])
         self.assertEqual(post_last.group, self.group)
         self.assertEqual(post_last.author, self.user)
-        self.assertTrue(Post.objects.filter(
-            image='posts/small.gif'
-        ).exists()
-        )
+        self.assertIsNotNone(post_last.image)
 
     def test_post_edit(self):
         self.post = Post.objects.create(
@@ -104,7 +101,7 @@ class PostCreateFormTests(TestCase):
         )
 
     def test_add_comment(self):
-        self.post = Post.objects.create(
+        post = Post.objects.create(
             text='Тестовый текст',
             author=self.user,
             group=self.group,
@@ -114,13 +111,15 @@ class PostCreateFormTests(TestCase):
             'text': 'Тестовый текст',
         }
         response = self.authorized_client.post(
-            reverse('add_comment', args=[self.user, self.post.id]),
+            reverse('add_comment', args=[self.user, post.id]),
             data=form_data,
             follow=True
         )
+        comment_last = Comment.objects.last()
         self.assertEqual(Comment.objects.count(), comment_count + 1)
+        self.assertEqual(comment_last.text, form_data['text'])
         self.assertRedirects(response, reverse(
-            'post', args=[self.user, self.post.id]
+            'post', args=[self.user, post.id]
         ))
 
     def test_post_edit_uknown_user(self):

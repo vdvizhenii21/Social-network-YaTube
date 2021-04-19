@@ -18,7 +18,7 @@ urlpatterns = [
     path("<str:username>/", views.profile, name="profile"),
     path("group/<slug:slug>/", views.group_posts, name="group_posts"),
     path(
-        "<username>/<int:post_id>/comment",
+        "<username>/<int:post_id>/comment/",
         views.add_comment,
         name="add_comment"
     ),
@@ -27,6 +27,4 @@ urlpatterns = [
         views.profile_unfollow,
         name="profile_unfollow"
     ),
-    path("404/", views.page_not_found, name="page_not_found"),
-    path("500/", views.server_error, name="server_error"),
 ]

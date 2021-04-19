@@ -12,7 +12,6 @@ class PostURLTests(TestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.test_user = User.objects.create_user(username='ScouserVT')
-        cls.test_user2 = User.objects.create_user(username='Fare')
         cls.group = Group.objects.create(
             title='Test',
             slug='testslug',
@@ -76,7 +75,9 @@ class PostURLTests(TestCase):
     def test_guest_new_accesses(self):
         """Проверяем редирект гостя с создания новой записи на авторизацию"""
         page_access = self.guest_client.get(reverse('new_post'))
-        self.assertRedirects(page_access, ('/auth/login/?next=/new/'))
+        self.assertRedirects(
+            page_access, reverse('login') + '?next=' + reverse('new_post')
+        )
 
     # Проверка вызываемых шаблонов для каждого адреса
     def test_urls_uses_correct_template(self):
@@ -100,9 +101,9 @@ class PostURLTests(TestCase):
         self.assertTemplateUsed(response, 'new.html')
 
     def test_guest_new_edit_accesses(self):
-        test_user2 = PostURLTests.test_user2
+        follower_user = User.objects.create_user(username='Fare')
         authorized_client2 = Client()
-        authorized_client2.force_login(test_user2)
+        authorized_client2.force_login(follower_user)
         response = authorized_client2.get(reverse(
             'post_edit', args=[self.test_user, self.post.id]
         ))

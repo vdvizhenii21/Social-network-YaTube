@@ -52,7 +52,7 @@ def profile(request, username):
     page = paginator.get_page(page_number)
     following = request.user.is_authenticated and Follow.objects.filter(
         author=author, user=request.user
-    ).exists
+    ).exists()
     context = {
         'page': page,
         'author': author,
@@ -120,8 +120,7 @@ def add_comment(request, username, post_id):
         comment.post = post
         form.save()
         return redirect('post', username=username, post_id=post_id)
-    else:
-        form = CommentForm(request.POST)
+    form = CommentForm(request.POST)
     return render(request, 'comments.html', {'form': form, 'post': post})
 
 
