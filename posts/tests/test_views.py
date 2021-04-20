@@ -158,7 +158,9 @@ class PostPagesTests(TestCase):
 
     def test_follow(self):
         follow_count = Follow.objects.count()
-        Follow.objects.create(author=self.test_user, user=self.follower_user)
+        self.authorized_client2.get(
+            reverse('profile_follow', args={self.test_user})
+        )
         self.assertEqual(Follow.objects.count(), follow_count + 1)
         last_object = Follow.objects.last()
         self.assertEqual(last_object.author, self.test_user)

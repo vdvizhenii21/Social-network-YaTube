@@ -45,7 +45,7 @@ class Post(models.Model):
         related_name="posts",
         blank=True,
         null=True)
-    image = models.ImageField(upload_to='posts/', blank=True, null=True)
+    image = models.ImageField(upload_to="posts/", blank=True, null=True)
 
     class Meta:
         ordering = ["-pub_date"]

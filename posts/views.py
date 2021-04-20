@@ -120,7 +120,6 @@ def add_comment(request, username, post_id):
         comment.post = post
         form.save()
         return redirect('post', username=username, post_id=post_id)
-    form = CommentForm(request.POST)
     return render(request, 'comments.html', {'form': form, 'post': post})
 
 

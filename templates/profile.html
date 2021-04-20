@@ -6,12 +6,12 @@
 {% load user_filters %}
 <main role="main" class="container">
     <div class="row">
-        {% include "author_card.html" with profile=True %}
+        {% include "includes/author_card.html" with author=author following=following profile=True %}
         <div class="col-md-9">
             {% for post in page %}
-                {% include "post_item.html" with post=post %}      
+                {% include "includes/post_item.html" with post=post %}      
             {% endfor %}
-            {% include "paginator.html" %}
+            {% include "includes/paginator.html" %}
         </div>
     </div>
 </main>
