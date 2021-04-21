@@ -109,6 +109,7 @@ class PostCreateFormTests(TestCase):
         comment_count = Comment.objects.count()
         form_data = {
             'text': 'Тестовый текст',
+
         }
         response = self.authorized_client.post(
             reverse('add_comment', args=[self.user, post.id]),
@@ -116,14 +117,13 @@ class PostCreateFormTests(TestCase):
             follow=True
         )
         comment_last = Comment.objects.last()
-        post_last = Post.objects.last()
         self.assertEqual(Comment.objects.count(), comment_count + 1)
         self.assertEqual(comment_last.text, form_data['text'])
         self.assertRedirects(response, reverse(
             'post', args=[self.user, post.id]
         ))
-        self.assertEqual(post_last.author, self.user)
-        self.assertEqual(post_last, post)
+        self.assertEqual(comment_last.author, self.user)
+        self.assertEqual(comment_last.post.id, post.id)
 
     def test_post_edit_uknown_user(self):
         self.post = Post.objects.create(

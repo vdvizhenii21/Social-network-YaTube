@@ -53,8 +53,8 @@ class PostPagesTests(TestCase):
         self.guest_client = Client()
         self.authorized_client = Client()
         self.authorized_client.force_login(test_user)
-        self.authorized_client2 = Client()
-        self.authorized_client2.force_login(follower_user)
+        self.follow_user = Client()
+        self.follow_user.force_login(follower_user)
 
     def test_pages_use_correct_template(self):
         """URL-адрес использует соответствующий шаблон."""
@@ -86,7 +86,7 @@ class PostPagesTests(TestCase):
 
     def test_follow_index_page(self):
         Follow.objects.create(author=self.test_user, user=self.follower_user)
-        response = self.authorized_client2.get(reverse('follow_index'))
+        response = self.follow_user.get(reverse('follow_index'))
         self.post_on_page(response)
 
     def test_home_page_shows_correct_context(self):
@@ -158,7 +158,7 @@ class PostPagesTests(TestCase):
 
     def test_follow(self):
         follow_count = Follow.objects.count()
-        self.authorized_client2.get(
+        self.follow_user.get(
             reverse('profile_follow', args={self.test_user})
         )
         self.assertEqual(Follow.objects.count(), follow_count + 1)
@@ -169,7 +169,7 @@ class PostPagesTests(TestCase):
     def test_unfollow(self):
         follow_count = Follow.objects.count()
         Follow.objects.create(author=self.test_user, user=self.follower_user)
-        self.authorized_client2.get(
+        self.follow_user.get(
             reverse('profile_unfollow', args={self.test_user})
         )
         self.assertEqual(Follow.objects.count(), follow_count)
