@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %} Записи сообщества {{ group.title }} {% endblock %}
+{% block title %} Community posts {{ group.title }} {% endblock %}
 {% block header %} {{ group.title }} {% endblock %}
 
 {% block content %}
@@ -15,7 +15,7 @@
               <img class="card-img" src="{{ im.url }}">
           {% endthumbnail %}
           <p>{{ post.text|linebreaksbr }}</p>
-          <h6>Автор: {{ post.author.get_full_name }}, Дата публикации: {{ post.pub_date|date:"d M Y"}}</h6>
+          <h6>Автор: {{ post.author.get_full_name }}, Publishing date: {{ post.pub_date|date:"d M Y"}}</h6>
           </div>
       {% endfor %}
       {% include "includes/paginator.html" %}

@@ -39,8 +39,8 @@ class Post(models.Model):
         related_name="posts")
     group = models.ForeignKey(
         Group,
-        verbose_name="Выберите группу",
-        help_text="Выберите группу из существующих",
+        verbose_name="Choose a group",
+        help_text="Select a group from existing",
         on_delete=models.SET_NULL,
         related_name="posts",
         blank=True,

@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}Создать новый пост{% endblock %}
+{% block title %}Create new post{% endblock %}
 
 {% block content %}
     <div class="features">
-        <h1>Создать новый пост</h1>
+        <h1>Create new post</h1>
         <form method="post">
         {% csrf_token %}
         {{ form }}

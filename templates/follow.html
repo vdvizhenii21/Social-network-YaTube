@@ -1,12 +1,12 @@
 {% extends "base.html" %} 
-{% block title %} Последние обновления автора {% endblock %}
+{% block title %} Latest author updates {% endblock %}
 
 {% block content %}
 <div class="container">
 
     {% include "includes/menu.html" with follow=True %}
 
-        <h1>Последние обновления автора </h1>
+        <h1>Latest author updates </h1>
 
         {% for post in page %}
             {% include "includes/post_item.html" with post=post %}
